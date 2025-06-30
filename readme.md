@@ -136,8 +136,8 @@ The CRUD Test Application is a full-stack web application designed to manage cus
    ```
 
 4. **Access the Application**:
-   - The client is available at [https://localhost:7046/](https://localhost:7046/).
-   - The API is available at [https://localhost:5091/](https://localhost:5091/).
+   - The client is available at [http://localhost:7045/](http://localhost:7045/).
+   - The API is available at [http://localhost:5091/](http://localhost:5091/swagger/index.html).
 
 ## Project Structure
 ```
