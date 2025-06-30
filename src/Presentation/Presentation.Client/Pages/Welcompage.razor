@@ -1,0 +1,17 @@
+﻿@page "/"
+@inject NavigationManager NavigationManager
+
+<div class="welcome-page">
+    <div class="welcome-content">
+        <h1>Welcome WeCodeRight! Team</h1>
+        <p>Please Explore My project and feel free to reach out with any questions!</p>
+        <button class="explore-button" @onclick="NavigateToMainPage">Explore the Application</button>
+    </div>
+</div>
+
+@code {
+    private void NavigateToMainPage()
+    {
+        NavigationManager.NavigateTo("/customers"); // Adjust the route to the main page or dashboard
+    }
+}

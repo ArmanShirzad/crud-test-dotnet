@@ -1,0 +1,61 @@
+﻿@page "/delete-customer/{Id:guid}"
+@using Presentation.Shared.Models
+@using System.Net.Http.Json
+@inject Services.ICustomerService CustomerService
+@inject NavigationManager NavigationManager
+
+<h3>Delete Customer</h3>
+
+@if (customer == null)
+{
+    <p>Loading customer details...</p>
+}
+else
+{
+    <div class="alert alert-warning">
+        <p>Are you sure you want to delete the following customer?</p>
+        <ul>
+            <li><strong>Name:</strong> @customer.FirstName @customer.LastName</li>
+            <li><strong>Email:</strong> @customer.Email</li>
+        </ul>
+    </div>
+
+    <button class="btn btn-danger" @onclick="ConfirmDelete">Yes, Delete</button>
+    <button class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+}
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger mt-3">
+        @errorMessage
+    </div>
+}
+
+@code {
+    [Parameter] public Guid Id { get; set; }
+    private CustomerDto customer;
+    private string errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        customer = await CustomerService.GetCustomerByIdAsync(Id);
+    }
+
+    private async Task ConfirmDelete()
+    {
+        var success = await CustomerService.DeleteCustomerAsync(Id);
+        if (success)
+        {
+            NavigationManager.NavigateTo("/customers");
+        }
+        else
+        {
+            errorMessage = "Failed to delete customer. Please try again.";
+        }
+    }
+
+    private void Cancel()
+    {
+        NavigationManager.NavigateTo("/customers");
+    }
+}

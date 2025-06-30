@@ -1,0 +1,72 @@
+﻿@page "/add-customer"
+@using Presentation.Shared.Models
+@using Microsoft.JSInterop;
+@using System.Net.Http.Json
+@inject Services.ICustomerService CustomerService
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+
+<h3>Add Customer</h3>
+
+<EditForm Model="newCustomer" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label>First Name:</label>
+        <InputText @bind-Value="newCustomer.FirstName" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Last Name:</label>
+        <InputText @bind-Value="newCustomer.LastName" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Date of Birth:</label>
+        <InputDate @bind-Value="newCustomer.DateOfBirth" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Phone Number:</label>
+        <InputText @bind-Value="newCustomer.PhoneNumber" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Email:</label>
+        <InputText @bind-Value="newCustomer.Email" class="form-control" />
+        <ValidationMessage For="@(() => newCustomer.Email)" />
+
+    </div>
+    <div class="form-group">
+        <label>Bank Account Number:</label>
+        <InputText @bind-Value="newCustomer.BankAccountNumber" class="form-control" />
+        <ValidationMessage For="@(() => newCustomer.BankAccountNumber)" />
+
+    </div>
+    <button type="submit" class="btn btn-primary">Add Customer</button>
+</EditForm>
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger mt-3">
+        @errorMessage
+    </div>
+}
+
+@code {
+    private CustomerDto newCustomer = new CustomerDto();
+    private string errorMessage = string.Empty;
+
+
+    private async Task HandleValidSubmit()
+    {
+
+        var success = await CustomerService.AddCustomerAsync(newCustomer);
+        if (success)
+        {
+            await JSRuntime.InvokeVoidAsync("alert", "Customer has been added successfully!");
+            NavigationManager.NavigateTo("/customers");
+        }
+        else
+        {
+            errorMessage = "Failed to add customer. Please try again.";
+        }
+    }
+}

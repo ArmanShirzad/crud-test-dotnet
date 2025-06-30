@@ -1,0 +1,55 @@
+﻿@page "/customers"
+@inject Services.ICustomerService CustomerService
+
+<h3>Customer List</h3>
+
+@if (customers == null)
+{
+    <p>Loading customers...</p>
+}
+else if (!customers.Any())
+{
+    <p>No customers found.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Date of Birth</th>
+                <th>Phone Number</th>
+                <th>Email</th>
+                <th>Bank Account Number</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var customer in customers)
+            {
+                <tr>
+                    <td>@customer.FirstName</td>
+                    <td>@customer.LastName</td>
+                    <td>@customer.DateOfBirth.ToString("yyyy-MM-dd")</td>
+                    <td>@customer.PhoneNumber.ToString()</td>
+                    <td>@customer.Email</td>
+                    <td>@customer.BankAccountNumber</td>
+                    <td>
+                        <a href="/edit-customer/@customer.Id" class="btn btn-primary btn-sm">Edit</a>
+                        <a href="/delete-customer/@customer.Id" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<CustomerDto>? customers;
+
+    protected override async Task OnInitializedAsync()
+    {
+        customers = await CustomerService.GetAllCustomersAsync();
+    }
+}

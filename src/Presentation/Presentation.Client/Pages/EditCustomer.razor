@@ -1,0 +1,75 @@
+﻿@page "/edit-customer/{Id:guid}"
+@using Presentation.Shared.Models
+@using System.Net.Http.Json
+@inject Services.ICustomerService CustomerService
+@inject NavigationManager NavigationManager
+
+<h3>Edit Customer</h3>
+
+@if (customer == null)
+{
+    <p>Loading customer details...</p>
+}
+else
+{
+    <EditForm Model="customer" OnValidSubmit="HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group">
+            <label>First Name:</label>
+            <InputText @bind-Value="customer.FirstName" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>Last Name:</label>
+            <InputText @bind-Value="customer.LastName" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>Date of Birth:</label>
+            <InputDate @bind-Value="customer.DateOfBirth" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>Phone Number:</label>
+            <InputText @bind-Value="customer.PhoneNumber" class="form-control" />        </div>
+        <div class="form-group">
+            <label>Email:</label>
+            <InputText @bind-Value="customer.Email" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>Bank Account Number:</label>
+            <InputText @bind-Value="customer.BankAccountNumber" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-primary">Update Customer</button>
+    </EditForm>
+}
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger mt-3">
+        @errorMessage
+    </div>
+}
+
+@code {
+    [Parameter] public Guid Id { get; set; }
+    private CustomerDto customer;
+    private string errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        customer = await CustomerService.GetCustomerByIdAsync(Id);
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        var success = await CustomerService.UpdateCustomerAsync(customer);
+        if (success)
+        {
+            NavigationManager.NavigateTo("/customers");
+        }
+        else
+        {
+            errorMessage = "Failed to update customer. Please try again.";
+        }
+    }
+}
