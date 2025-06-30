@@ -1,6 +1,6 @@
 # CRUD Test Application
 ## Demo
-![Demo](./assets/crud-BDD.mp4)
+![Demo](./assets/crud-BDD.gif)
 
 ## Table of Contents
 - [Overview](#overview)
